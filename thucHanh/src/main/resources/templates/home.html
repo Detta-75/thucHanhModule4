@@ -1,10 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Danh sách khuyến mãi</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        .table thead th {
+            background-color: #f8d7da;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-<h5>YYYYY</h5>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between mb-3">
+        <h3>Danh sách khuyến mãi</h3>
+        <div>
+            <a class="btn btn-primary me-2" th:href="@{/show-form-create}">Thêm khuyến mãi</a>
+            <form th:action="@{/sreach}" method="get" class="row g-2 mb-3">
+                <div class="col-md-3">
+                    <input type="number" name="discountAmount" class="form-control" placeholder="Mức giảm giá tối thiểu"
+                           th:value="${discountAmount}">
+                </div>
+                <div class="col-md-3">
+                    <input type="date" name="startDate" class="form-control" placeholder="Bắt đầu từ"
+                           th:value="${startDate}">
+                </div>
+                <div class="col-md-3">
+                    <input type="date" name="endDate" class="form-control" placeholder="Kết thúc đến"
+                           th:value="${endDate}">
+                </div>
+                <div class="col-md-3 d-flex">
+                    <button class="btn btn-outline-primary me-2" type="submit">🔍</button>
+                    <a class="btn btn-outline-secondary" th:href="@{/}">Xóa lọc</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="success-message" th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Tiêu đề</th>
+            <th>Thời gian bắt đầu</th>
+            <th>Thời gian kết thúc</th>
+            <th>Mức giảm giá</th>
+            <th>Chi Tiết</th>
+            <th>Sửa</th>
+            <th>Xóa</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${promotions}">
+            <td th:text="${p.title}"></td>
+            <td th:text="${p.startDate}"></td>
+            <td th:text="${p.endDate}"></td>
+            <td th:text="${p.discountAmount}"></td>
+            <td th:text="${p.description}"></td>
+            <td>
+                <a class="text-primary" th:href="@{/sreach}">
+                    ✏️
+                </a>
+            </td>
+            <td>
+                <form>
+                    <a th:href="@{'/delete-promotion/' + ${p.id}}"
+                       th:attr="onclick=|return confirm('Bạn có muốn xóa Chương trình khuyến mãi ${p.title} không?')|"
+                       class="icon-btn text-danger"
+                       style="text-decoration:none; font-size: 1.2rem;">🗑️</a>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
+<script>
+    setTimeout(function () {
+        var msg = document.getElementById("success-message");
+        if (msg) {
+            msg.style.display = "none";
+        }
+    }, 3000); // 3 giây
+</script>
 </html>
